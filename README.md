@@ -1,34 +1,43 @@
-# Práctica I: From Pixels to Integral
+# Práctica I: From Pixels to Integral / Cálculo de Suma de Riemann sobre Imágenes PBM (P4)
 **Asignatura:** Lenguajes de Programación (ST0244)  
 **Universidad:** Universidad EAFIT  
 **Profesor:** Alexander Narváez Berrío  
 
 ## Integrantes
-Miguel Angel Cordoba Garrido
+* Miguel Ángel Córdoba Garrido
 
 ## Entorno de Desarrollo
 * **Haskell:** GHC v9.x
 * **Prolog:** SWI-Prolog v9.x
 * **Sistema Operativo:** Windows / Linux
 
-## Instrucciones de Ejecución
+---
 
-### Requisitos Previos
-* Tener instalado el compilador de Haskell (`ghc`).
-* Tener instalado el intérprete de SWI-Prolog (`swipl`).
+## 📝 Descripción del Proyecto
+Este repositorio contiene la solución para la **Práctica I** del curso **Lenguajes de Programación**. El objetivo principal es calcular la Suma de Riemann (área bajo la curva en píxeles cuadrados) a partir del análisis binario de una imagen en formato PBM (`curva_binaria_P4.pbm`), implementando dos paradigmas de programación diferentes: **Funcional (Haskell)** y **Lógico (Prolog)**.
 
 ---
 
-### 1. Ejecución en Haskell
-Abre la terminal dentro de la carpeta del proyecto y ejecuta:
+## 📁 Estructura del Repositorio
 
-```bash
-cd Haskell
-ghc Main.hs -o programa
-./programa
+```text
+.
+├── curva_binaria_P4.pbm   # Archivo de imagen binario P4 (567x319)
+├── Haskell/
+│   └── Main.hs            # Solución funcional en Haskell
+├── Prolog/
+│   └── Main.pl            # Solución lógica en Prolog
+└── README.md              # Documentación de la práctica
 
-### Haskell
-```bash
+------------------------------------------------------------------
+
+## Ejecutable desde PowerShell
+
 cd Haskell
-ghc Main.hs -o programa
-./programa
+runhaskell Main.hs
+
+cd Prolog
+swipl -g "calcular_area, halt." Main.pl
+
+¡POR SI NO TIENE EL PATH GLOBAL!
+& "C:\Program Files\swipl\bin\swipl.exe" -g "calcular_area, halt." Main.pl
