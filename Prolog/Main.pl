@@ -1,37 +1,50 @@
 :- use_module(library(readutil)).
 
-% 1. Leer archivo binario
+% 1. Leer el archivo binario completo
 cargar_pbm(Ruta, Bytes) :-
     read_file_to_codes(Ruta, Bytes, [type(binary)]).
 
-% 2. Relacion para verificar si un pixel (X,Y) es negro (1) o blanco (0)
-pixel_negro(X, Y, Bytes, Ancho, BytesPorFila) :-
-    ByteIndex is Y * BytesPorFila + (X // 8),
+% 2. Verificar si un pixel (X,Y) es negro (1)
+pixel_negro(X, Y, Bytes, DataOffset, BytesPorFila) :-
+    ByteIndex is DataOffset + (Y * BytesPorFila) + (X // 8),
     BitIndex is 7 - (X mod 8),
     nth0(ByteIndex, Bytes, Byte),
     Bit is (Byte >> BitIndex) /\ 1,
     Bit =:= 1.
 
-% 3. Relacion f(X) -> Altura
-f(X, Bytes, Ancho, Alto, BytesPorFila, Altura) :-
-    findall(Y, (between(0, Alto-1, Y1), Y is Alto - 1 - Y1, pixel_negro(X, Y, Bytes, Ancho, BytesPorFila)), Ys),
-    contar_consecutivos(Ys, Altura).
+% 3. Funcion f(X) -> Altura (Conteo consecutivo desde abajo hacia arriba)
+f(X, Bytes, DataOffset, Alto, BytesPorFila, Altura) :-
+    YInicial is Alto - 1,
+    contar_negros_columna(X, YInicial, Bytes, DataOffset, BytesPorFila, 0, Altura).
 
-contar_consecutivos([Y|Resto], Altura) :-
-    % Logica para contar desde abajo sin interrupciones
-    contar_aux([Y|Resto], 0, Altura).
-contar_aux([], Acc, Acc).
-contar_aux([_|_], Acc, Acc). % Detener al hallar el primer blanco
+% Caso base / Contar mientras sea negro
+contar_negros_columna(X, Y, Bytes, DataOffset, BytesPorFila, Acc, Altura) :-
+    Y >= 0,
+    pixel_negro(X, Y, Bytes, DataOffset, BytesPorFila),
+    !,
+    YSiguiente is Y - 1,
+    AccSiguiente is Acc + 1,
+    contar_negros_columna(X, YSiguiente, Bytes, DataOffset, BytesPorFila, AccSiguiente, Altura).
 
-% 4. Construccion declarativa de M y Suma
+% Caso de parada: Se encontro un pixel blanco o se llego al tope de la imagen
+contar_negros_columna(_, _, _, _, _, Altura, Altura).
+
+% 4. Construccion declarativa de la lista M y calculo de la Suma de Riemann
 calcular_area :-
     cargar_pbm('../curva_binaria_P4.pbm', Bytes),
-    Ancho = 567, Alto = 319, BytesPorFila = 71,
+    Ancho = 567, 
+    Alto = 319, 
+    BytesPorFila = 71,
     
-    % findall para construir la lista M de alturas
+    % Calcular offset para ignorar el encabezado PBM binario
+    length(Bytes, TotalBytes),
+    DataOffset is TotalBytes - (Alto * BytesPorFila),
+    
+    % Construccion declarativa de M usando findall/3
     MaxX is Ancho - 1,
-    findall(Altura, (between(0, MaxX, X), f(X, Bytes, Ancho, Alto, BytesPorFila, Altura)), M),
+    findall(Altura, (between(0, MaxX, X), f(X, Bytes, DataOffset, Alto, BytesPorFila, Altura)), M),
     
-    % Suma de la lista M
+    % Suma de Riemann (Area en pixeles cuadrados)
     sum_list(M, Area),
+    format('Imagen cargada: ~wx~w pixeles~n', [Ancho, Alto]),
     format('Area calculada: ~w pixeles cuadrados~n', [Area]).
