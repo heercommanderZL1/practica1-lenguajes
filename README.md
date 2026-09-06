@@ -40,4 +40,5 @@ cd Prolog
 swipl -g "calcular_area, halt." Main.pl
 
 ¡POR SI NO TIENE EL PATH GLOBAL!
+
 & "C:\Program Files\swipl\bin\swipl.exe" -g "calcular_area, halt." Main.pl
