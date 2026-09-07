@@ -5,6 +5,7 @@
 
 ## Integrantes
 * Miguel Ángel Córdoba Garrido
+* Samuel David Gomez Ramirez
 
 ## Entorno de Desarrollo
 * **Haskell:** GHC v9.x
