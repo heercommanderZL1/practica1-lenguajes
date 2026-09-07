@@ -13,12 +13,12 @@
 
 ---
 
-## 📝 Descripción del Proyecto
+## Descripción del Proyecto
 Este repositorio contiene la solución para la **Práctica I** del curso **Lenguajes de Programación**. El objetivo principal es calcular la Suma de Riemann (área bajo la curva en píxeles cuadrados) a partir del análisis binario de una imagen en formato PBM (`curva_binaria_P4.pbm`), implementando dos paradigmas de programación diferentes: **Funcional (Haskell)** y **Lógico (Prolog)**.
 
 ---
 
-## 📁 Estructura del Repositorio
+## Estructura del Repositorio
 
 ```text
 .
